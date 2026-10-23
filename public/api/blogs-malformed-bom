@@ -1,0 +1,96 @@
+﻿{
+  "data": [
+    {
+      "id": 1,
+      "title": "webhooks vs api gateways: a practical guide",
+      "slug": "webhooks-vs-api-gateways-a-practical-guide-1",
+      "author": {
+        "id": 6,
+        "name": "Tomas Reyes",
+        "email": "tomas.reyes@example.com"
+      },
+      "status": "published",
+      "tags": [
+        "debugging",
+        "performance"
+      ],
+      "publishedAt": "2024-06-05T00:00:00.000Z",
+      "updatedAt": "2024-06-10T00:00:00.000Z",
+      "excerpt": "Or even we also this look the. Mock request payload just payload can all of test they but think time request in. Give timeout most rest head…",
+      "body": "Or even we also this look the. Mock request payload just payload can all of test they but think time request in. Give timeout most rest header could that give come deploy not into get. Would will well before get will buffer two have. Status stream by you there schema would out module the other any schema at.\n\nOr to status through payload will get look there would could good response. By buffer not of but up any get. Well which schema but know can well and payload now before see way their new? See well header http over new come request json. Its use query which go would with say know get.\n\nIn get it a from into. Then take just http json now into to there first but us no give into all. Look know through one now up all about just them only request can see?",
+      "stats": {
+        "views": 11788,
+        "comments": 2,
+        "readingTimeMinutes": 1
+      },
+      "links": {
+        "self": "/api/blog/1"
+      }
+    },
+    {
+      "id": 2,
+      "title": "11 ways to secure webhooks",
+      "slug": "11-ways-to-secure-webhooks-2",
+      "author": {
+        "id": 1,
+        "name": "Maya Chen",
+        "email": "maya.chen@example.com"
+      },
+      "status": "published",
+      "tags": [
+        "serverless",
+        "rest",
+        "tooling",
+        "api"
+      ],
+      "publishedAt": "2025-01-20T00:00:00.000Z",
+      "updatedAt": "2025-01-28T00:00:00.000Z",
+      "excerpt": "No payload rest first look api come way any their schema latency. No some runtime these json header client good! To how but like http get tw…",
+      "body": "No payload rest first look api come way any their schema latency. No some runtime these json header client good! To how but like http get two us endpoint. Runtime endpoint could but no and your and its we go query at!\n\nBut time can as first but. Can like module who like query retry then and take time which be the? Over or because and like when not?\n\nMake retry deploy look could then through our our http of new use well these we. And server so still two be new some when. All just do in two some out you do come know because the http the. Parse the work this than schema way about about this stream? Most some then want there time from response!\n\nQuery through between timeout time by most all what do because know good which go then. Api up be query of come stream request there. Our payload want us do could most so retry do module test. No no want client out just would there new they can over. By of json header just up over their will.",
+      "stats": {
+        "views": 14382,
+        "comments": 2,
+        "readingTimeMinutes": 1
+      },
+      "links": {
+        "self": "/api/blog/2"
+      }
+    },
+    {
+      "id": 3,
+      "title": "api gateways vs microservices: a practical guide",
+      "slug": "api-gateways-vs-microservices-a-practical-guide-3",
+      "author": {
+        "id": 5,
+        "name": "Lena Fischer",
+        "email": "lena.fischer@example.com"
+      },
+      "status": "published",
+      "tags": [
+        "integration",
+        "ci",
+        "debugging"
+      ],
+      "publishedAt": "2025-03-06T00:00:00.000Z",
+      "updatedAt": "2025-03-13T00:00:00.000Z",
+      "excerpt": "Which be and make be after rest. Still want stream work api any from api now have look be from. Request before but build retry us after head…",
+      "body": "Which be and make be after rest. Still want stream work api any from api now have look be from. Request before but build retry us after header in. Then a look about by it this schema take if who? Than new can with than. These these it even can there what!\n\nGo say or api as of have take there good use think make some will about. At two through any time way a be stream server token make way? What a also can them or how see.\n\nWork webhook first rest out even so and between! This webhook an then response client through up do go their. Then buffer them response webhook deploy or latency runtime from. Well you build no request build on them think can any? This deploy or still still runtime response other back our how some so of this? By will endpoint timeout there because by.",
+      "stats": {
+        "views": 6137,
+        "comments": 10,
+        "readingTimeMinutes": 1
+      },
+      "links": {
+        "self": "/api/blog/3"
+      }
+    }
+  ],
+  "meta": {
+    "total": 3,
+    "count": 3
+  },
+  "links": {
+    "self": "/api/blogs-malformed-bom",
+    "spec": "/openapi.json"
+  }
+}

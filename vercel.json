@@ -1,0 +1,25 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/blog/*.js": {
+      "includeFiles": "data/**"
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {"key": "Access-Control-Allow-Origin", "value": "*"},
+        {"key": "Access-Control-Allow-Methods", "value": "GET, OPTIONS"},
+        {"key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization"},
+        {"key": "Cache-Control", "value": "no-store"}
+      ]
+    },
+    {
+      "source": "/api/(status|blogs|blogs-page2|blogs-page3|blogs-small|blogs-large|blogs-empty|blogs-null|blogs-wrong-shape|blogs-malformed-truncated|blogs-malformed-syntax|blogs-malformed-bom|blogs-malformed-empty)",
+      "headers": [
+        {"key": "Content-Type", "value": "application/json; charset=utf-8"}
+      ]
+    }
+  ]
+}

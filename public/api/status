@@ -1,0 +1,7 @@
+{
+  "status": "ok",
+  "service": "mock-json blog api",
+  "version": "1.0.0",
+  "docs": "/",
+  "spec": "/openapi.json"
+}

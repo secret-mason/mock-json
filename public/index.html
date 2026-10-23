@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mock-json — a blog API for testing REST integrations</title>
+<style>
+  body { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; max-width: 960px; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; }
+  h1 { font-size: 1.4rem; } h2 { font-size: 1.05rem; margin-top: 2rem; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+  td, th { border: 1px solid #ddd; padding: 0.35rem 0.6rem; text-align: left; vertical-align: top; }
+  th { background: #f4f4f4; }
+  a { color: #0550ae; }
+  code { background: #f4f4f4; padding: 0 0.25rem; }
+  .note { color: #555; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<h1>mock-json</h1>
+<p>A mock blog REST API for testing REST integrations. Static JSON payloads plus
+serverless endpoints for the cases static hosting can't express (status codes,
+content types, latency, dynamic 404s). Spec: <a href="/openapi.json">/openapi.json</a>.
+All endpoints are <code>GET</code>-only and return <code>Access-Control-Allow-Origin: *</code>.</p>
+
+<h2>Normal</h2>
+<table>
+<tr><th>Endpoint</th><th>Status</th><th>Body</th></tr>
+<tr><td><a href="/api/status">/api/status</a></td><td>200</td><td>Health check</td></tr>
+<tr><td><a href="/api/blogs">/api/blogs</a></td><td>200</td><td>15 posts (~24KB), links.next → page2</td></tr>
+<tr><td><a href="/api/blogs-page2">/api/blogs-page2</a></td><td>200</td><td>Posts 16–30</td></tr>
+<tr><td><a href="/api/blogs-page3">/api/blogs-page3</a></td><td>200</td><td>Posts 31–40, next: null</td></tr>
+<tr><td><a href="/api/blog/1">/api/blog/1…15</a></td><td>200 / 404</td><td>Single post + comments; unknown id → JSON 404</td></tr>
+</table>
+
+<h2>Size variants</h2>
+<table>
+<tr><th>Endpoint</th><th>Status</th><th>Body</th></tr>
+<tr><td><a href="/api/blogs-small">/api/blogs-small</a></td><td>200</td><td>2 posts (~2KB)</td></tr>
+<tr><td><a href="/api/blogs-large">/api/blogs-large</a></td><td>200</td><td>500 posts (~1.7MB)</td></tr>
+<tr><td><a href="/api/blog/large">/api/blog/large</a></td><td>200</td><td>Single post (~600KB)</td></tr>
+<tr><td><a href="/api/blogs-empty">/api/blogs-empty</a></td><td>200</td><td><code>{"data": []}</code></td></tr>
+</table>
+
+<h2>Malformed — HTTP 200, content-type lies or body is broken</h2>
+<table>
+<tr><th>Endpoint</th><th>Status / Content-Type</th><th>What's wrong</th></tr>
+<tr><td><a href="/api/blogs-malformed-truncated">/api/blogs-malformed-truncated</a></td><td>200 json</td><td>Cut off mid-string</td></tr>
+<tr><td><a href="/api/blogs-malformed-syntax">/api/blogs-malformed-syntax</a></td><td>200 json</td><td>Trailing commas, single quotes, NaN, comments</td></tr>
+<tr><td><a href="/api/blogs-malformed-bom">/api/blogs-malformed-bom</a></td><td>200 json</td><td>UTF-8 BOM before valid JSON</td></tr>
+<tr><td><a href="/api/blogs-malformed-empty">/api/blogs-malformed-empty</a></td><td>200 json</td><td>Zero-byte body</td></tr>
+<tr><td><a href="/api/blogs-wrong-shape">/api/blogs-wrong-shape</a></td><td>200 json</td><td>Parses fine, but <code>data</code> is a string</td></tr>
+<tr><td><a href="/api/blogs-null">/api/blogs-null</a></td><td>200 json</td><td>Body is the literal <code>null</code></td></tr>
+<tr><td><a href="/api/blog/malformed">/api/blog/malformed</a></td><td>200 json</td><td>Truncated single-post object</td></tr>
+<tr><td><a href="/api/blogs-malformed-html">/api/blogs-malformed-html</a></td><td>200 text/html</td><td>Proxy/WAF-style interstitial page</td></tr>
+<tr><td><a href="/api/blogs-malformed-text">/api/blogs-malformed-text</a></td><td>200 text/plain</td><td>Plain-text error line</td></tr>
+<tr><td><a href="/api/blogs-malformed-xml">/api/blogs-malformed-xml</a></td><td>200 application/xml</td><td>Valid XML, wrong format entirely</td></tr>
+</table>
+
+<h2>Errors, redirects, latency</h2>
+<table>
+<tr><th>Endpoint</th><th>Status</th><th>Body</th></tr>
+<tr><td><a href="/api/blogs-error">/api/blogs-error</a></td><td>429</td><td>JSON error + <code>Retry-After: 30</code></td></tr>
+<tr><td><a href="/api/blogs-server-error">/api/blogs-server-error</a></td><td>500</td><td>JSON error body</td></tr>
+<tr><td><a href="/api/blogs-bad-gateway">/api/blogs-bad-gateway</a></td><td>502</td><td>text/html nginx-style page</td></tr>
+<tr><td><a href="/api/blogs-redirect">/api/blogs-redirect</a></td><td>308</td><td><code>Location: /api/blogs</code></td></tr>
+<tr><td><a href="/api/blogs-slow">/api/blogs-slow</a></td><td>200 after delay</td><td><code>?ms=5000</code> (default 2000, cap 15000)</td></tr>
+<tr><td><a href="/api/blog/999">/api/blog/999</a></td><td>404</td><td>JSON error body</td></tr>
+</table>
+
+<p class="note">Non-GET verbs return <code>405</code> on serverless endpoints. Payloads are
+generated deterministically by <code>scripts/generate.mjs</code> (<code>npm run generate</code>).</p>
+</body>
+</html>

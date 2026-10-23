@@ -1,0 +1,318 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Mock Blog API",
+    "version": "1.0.0",
+    "description": "A mock blog REST API for testing REST integrations. Static extensionless JSON payloads served by Vercel, plus serverless functions for status codes, content types, latency, and dynamic lookups that static hosting can't express. All endpoints are GET-only and CORS-enabled.\n\nDeliberate edge cases are grouped by tag: `size` (large/small/empty bodies), `malformed` (broken or wrong-format bodies, often still HTTP 200 + application/json), and `errors` (4xx/5xx, redirects, latency).",
+    "license": {"name": "MIT"}
+  },
+  "servers": [
+    {"url": "https://mock-json.vercel.app", "description": "Production (update this URL after first deploy)"},
+    {"url": "/", "description": "Same origin"}
+  ],
+  "paths": {
+    "/api/status": {
+      "get": {
+        "tags": ["meta"],
+        "summary": "Health check",
+        "operationId": "getStatus",
+        "responses": {
+          "200": {"description": "Service is up", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Status"}}}}
+        }
+      }
+    },
+    "/api/blogs": {
+      "get": {
+        "tags": ["posts"],
+        "summary": "List blog posts (page 1)",
+        "operationId": "listBlogs",
+        "responses": {
+          "200": {"description": "List envelope with 15 full posts", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/BlogList"}}}}
+        }
+      }
+    },
+    "/api/blogs-page2": {
+      "get": {
+        "tags": ["posts"],
+        "summary": "List blog posts (page 2)",
+        "operationId": "listBlogsPage2",
+        "responses": {
+          "200": {"description": "List envelope, posts 16-30", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/BlogList"}}}}
+        }
+      }
+    },
+    "/api/blogs-page3": {
+      "get": {
+        "tags": ["posts"],
+        "summary": "List blog posts (final page, next: null)",
+        "operationId": "listBlogsPage3",
+        "responses": {
+          "200": {"description": "List envelope, posts 31-40", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/BlogList"}}}}
+        }
+      }
+    },
+    "/api/blog/{id}": {
+      "get": {
+        "tags": ["posts"],
+        "summary": "Get a single blog post with comments",
+        "operationId": "getBlog",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Post id 1-15, or the special values `large` (one ~600KB post) or `malformed` (200 + application/json but truncated body)",
+            "schema": {"type": "string"}
+          }
+        ],
+        "responses": {
+          "200": {"description": "Post detail including comments", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/BlogDetail"}}}},
+          "404": {"description": "Unknown id", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}}
+        }
+      }
+    },
+    "/api/blogs-small": {
+      "get": {
+        "tags": ["size"],
+        "summary": "Tiny list (2 posts, ~2KB)",
+        "operationId": "listBlogsSmall",
+        "responses": {"200": {"description": "Small list envelope", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/BlogList"}}}}}
+      }
+    },
+    "/api/blogs-large": {
+      "get": {
+        "tags": ["size"],
+        "summary": "Large list (500 posts, ~1.7MB)",
+        "operationId": "listBlogsLarge",
+        "responses": {"200": {"description": "Large list envelope for streaming / large-payload testing", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/BlogList"}}}}}
+      }
+    },
+    "/api/blogs-empty": {
+      "get": {
+        "tags": ["size"],
+        "summary": "Empty list",
+        "operationId": "listBlogsEmpty",
+        "responses": {"200": {"description": "Envelope with empty data array", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/BlogList"}}}}}
+      }
+    },
+    "/api/blogs-null": {
+      "get": {
+        "tags": ["malformed"],
+        "summary": "Body is the literal `null`",
+        "operationId": "listBlogsNull",
+        "responses": {"200": {"description": "Valid JSON scalar, not the documented object", "content": {"application/json": {"schema": {"type": "object", "nullable": true}}}}}
+      }
+    },
+    "/api/blogs-wrong-shape": {
+      "get": {
+        "tags": ["malformed"],
+        "summary": "Valid JSON, wrong shape (data is a string)",
+        "operationId": "listBlogsWrongShape",
+        "responses": {"200": {"description": "Parses fine but violates the schema", "content": {"application/json": {"schema": {"type": "object"}}}}}
+      }
+    },
+    "/api/blogs-malformed-truncated": {
+      "get": {
+        "tags": ["malformed"],
+        "summary": "JSON cut off mid-token",
+        "operationId": "listBlogsTruncated",
+        "responses": {"200": {"description": "Unparseable: body ends mid-string", "content": {"application/json": {"schema": {"type": "string"}}}}}
+      }
+    },
+    "/api/blogs-malformed-syntax": {
+      "get": {
+        "tags": ["malformed"],
+        "summary": "JSON5-ish syntax errors",
+        "operationId": "listBlogsSyntax",
+        "responses": {"200": {"description": "Unparseable: trailing commas, single quotes, unquoted keys, NaN, comments, raw newline in a string", "content": {"application/json": {"schema": {"type": "string"}}}}}
+      }
+    },
+    "/api/blogs-malformed-bom": {
+      "get": {
+        "tags": ["malformed"],
+        "summary": "UTF-8 BOM before valid JSON",
+        "operationId": "listBlogsBom",
+        "responses": {"200": {"description": "Valid JSON preceded by EF BB BF — breaks strict parsers", "content": {"application/json": {"schema": {"type": "string"}}}}}
+      }
+    },
+    "/api/blogs-malformed-empty": {
+      "get": {
+        "tags": ["malformed"],
+        "summary": "Zero-byte body",
+        "operationId": "listBlogsEmptyBody",
+        "responses": {"200": {"description": "200 + application/json with an empty body", "content": {"application/json": {"schema": {"type": "string"}}}}}
+      }
+    },
+    "/api/blogs-malformed-html": {
+      "get": {
+        "tags": ["malformed"],
+        "summary": "HTML interstitial instead of JSON",
+        "operationId": "listBlogsHtml",
+        "responses": {"200": {"description": "200 + text/html — simulates a proxy/WAF page on a JSON endpoint", "content": {"text/html": {"schema": {"type": "string"}}}}}
+      }
+    },
+    "/api/blogs-malformed-text": {
+      "get": {
+        "tags": ["malformed"],
+        "summary": "Plain text instead of JSON",
+        "operationId": "listBlogsText",
+        "responses": {"200": {"description": "200 + text/plain non-JSON body", "content": {"text/plain": {"schema": {"type": "string"}}}}}
+      }
+    },
+    "/api/blogs-malformed-xml": {
+      "get": {
+        "tags": ["malformed"],
+        "summary": "Valid XML instead of JSON",
+        "operationId": "listBlogsXml",
+        "responses": {"200": {"description": "200 + application/xml", "content": {"application/xml": {"schema": {"type": "string"}}}}}
+      }
+    },
+    "/api/blogs-error": {
+      "get": {
+        "tags": ["errors"],
+        "summary": "Rate limited",
+        "operationId": "listBlogsRateLimited",
+        "responses": {"429": {"description": "Retry-After: 30 with JSON error body", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}}}
+      }
+    },
+    "/api/blogs-server-error": {
+      "get": {
+        "tags": ["errors"],
+        "summary": "Internal server error",
+        "operationId": "listBlogsServerError",
+        "responses": {"500": {"description": "JSON error body", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}}}
+      }
+    },
+    "/api/blogs-bad-gateway": {
+      "get": {
+        "tags": ["errors"],
+        "summary": "Bad gateway (HTML error page)",
+        "operationId": "listBlogsBadGateway",
+        "responses": {"502": {"description": "text/html nginx-style error page", "content": {"text/html": {"schema": {"type": "string"}}}}}
+      }
+    },
+    "/api/blogs-redirect": {
+      "get": {
+        "tags": ["errors"],
+        "summary": "308 Permanent Redirect to /api/blogs",
+        "operationId": "listBlogsRedirect",
+        "responses": {"308": {"description": "Location: /api/blogs"}}
+      }
+    },
+    "/api/blogs-slow": {
+      "get": {
+        "tags": ["errors"],
+        "summary": "Artificial latency for timeout testing",
+        "operationId": "listBlogsSlow",
+        "parameters": [
+          {"name": "ms", "in": "query", "description": "Delay in milliseconds (default 2000, capped at 15000)", "schema": {"type": "integer", "default": 2000, "maximum": 15000}}
+        ],
+        "responses": {"200": {"description": "Empty list envelope reporting the applied delay", "content": {"application/json": {"schema": {"type": "object"}}}}}
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Status": {
+        "type": "object",
+        "properties": {
+          "status": {"type": "string", "example": "ok"},
+          "service": {"type": "string"},
+          "version": {"type": "string"}
+        }
+      },
+      "Author": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "integer"},
+          "name": {"type": "string"},
+          "email": {"type": "string", "format": "email"}
+        }
+      },
+      "Blog": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "integer"},
+          "title": {"type": "string"},
+          "slug": {"type": "string"},
+          "author": {"$ref": "#/components/schemas/Author"},
+          "status": {"type": "string", "enum": ["published"]},
+          "tags": {"type": "array", "items": {"type": "string"}},
+          "publishedAt": {"type": "string", "format": "date-time"},
+          "updatedAt": {"type": "string", "format": "date-time"},
+          "excerpt": {"type": "string"},
+          "body": {"type": "string"},
+          "stats": {
+            "type": "object",
+            "properties": {
+              "views": {"type": "integer"},
+              "comments": {"type": "integer"},
+              "readingTimeMinutes": {"type": "integer"}
+            }
+          },
+          "links": {"type": "object", "properties": {"self": {"type": "string"}}}
+        }
+      },
+      "Comment": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "integer"},
+          "postId": {"type": "integer"},
+          "author": {"type": "object", "properties": {"name": {"type": "string"}}},
+          "body": {"type": "string"},
+          "createdAt": {"type": "string", "format": "date-time"}
+        }
+      },
+      "BlogDetail": {
+        "allOf": [
+          {"$ref": "#/components/schemas/Blog"},
+          {
+            "type": "object",
+            "properties": {
+              "comments": {"type": "array", "items": {"$ref": "#/components/schemas/Comment"}},
+              "related": {"type": "array", "items": {"type": "integer"}}
+            }
+          }
+        ]
+      },
+      "BlogList": {
+        "type": "object",
+        "properties": {
+          "data": {"type": "array", "items": {"$ref": "#/components/schemas/Blog"}},
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {"type": "integer"},
+              "count": {"type": "integer"}
+            }
+          },
+          "links": {
+            "type": "object",
+            "properties": {
+              "self": {"type": "string"},
+              "next": {"type": "string", "nullable": true},
+              "prev": {"type": "string"},
+              "spec": {"type": "string"}
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {"type": "string"},
+              "message": {"type": "string"},
+              "hint": {"type": "string"},
+              "retryAfterSeconds": {"type": "integer"},
+              "requestId": {"type": "string"}
+            },
+            "required": ["code", "message"]
+          }
+        }
+      }
+    }
+  }
+}

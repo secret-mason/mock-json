@@ -1,0 +1,11 @@
+{
+  "name": "mock-json",
+  "private": true,
+  "type": "module",
+  "description": "Static + serverless mock blog API for testing REST integrations. Hosted on Vercel.",
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  }
+}

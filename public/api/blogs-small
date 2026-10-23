@@ -1,0 +1,68 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "REST APIs vs serverless functions: a practical guide",
+      "slug": "rest-apis-vs-serverless-functions-a-practical-guide-1",
+      "author": {
+        "id": 6,
+        "name": "Tomas Reyes",
+        "email": "tomas.reyes@example.com"
+      },
+      "status": "published",
+      "tags": [
+        "testing",
+        "webdev",
+        "tooling",
+        "rest"
+      ],
+      "publishedAt": "2024-06-25T00:00:00.000Z",
+      "updatedAt": "2024-06-25T00:00:00.000Z",
+      "excerpt": "Who a new on by status only test response because. Deploy which other between through? These the come payload so out by not for when before…",
+      "body": "Who a new on by status only test response because. Deploy which other between through? These the come payload so out by not for when before but. Have stream two mock at can server us about with about any rest by say any. Response to know when stream come other the good your work. Http could as response query use do with some and other but.",
+      "stats": {
+        "views": 19136,
+        "comments": 29,
+        "readingTimeMinutes": 1
+      },
+      "links": {
+        "self": "/api/blog/1"
+      }
+    },
+    {
+      "id": 2,
+      "title": "How to secure api gateways",
+      "slug": "how-to-secure-api-gateways-2",
+      "author": {
+        "id": 8,
+        "name": "Noah Wright",
+        "email": "noah.wright@example.com"
+      },
+      "status": "published",
+      "tags": [
+        "testing",
+        "performance"
+      ],
+      "publishedAt": "2025-01-20T00:00:00.000Z",
+      "updatedAt": "2025-01-29T00:00:00.000Z",
+      "excerpt": "Your stream of just take then your they. After request test other runtime of also client! Two endpoint stream its endpoint most webhook. Do…",
+      "body": "Your stream of just take then your they. After request test other runtime of also client! Two endpoint stream its endpoint most webhook. Do latency only about any request one client api want between who good through. Any have so like just on but not of their mock than from http.",
+      "stats": {
+        "views": 639,
+        "comments": 12,
+        "readingTimeMinutes": 1
+      },
+      "links": {
+        "self": "/api/blog/2"
+      }
+    }
+  ],
+  "meta": {
+    "total": 2,
+    "count": 2
+  },
+  "links": {
+    "self": "/api/blogs-small",
+    "spec": "/openapi.json"
+  }
+}

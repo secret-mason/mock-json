@@ -1,0 +1,9 @@
+{
+  "data": "expected an array of posts — got a string instead",
+  "meta": {
+    "total": 1
+  },
+  "links": {
+    "self": "/api/blogs-wrong-shape"
+  }
+}

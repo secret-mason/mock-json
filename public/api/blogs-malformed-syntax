@@ -1,0 +1,16 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "This payload is intentionally invalid",
+      'author': 'single-quoted key and value',
+      "tags": ["api", "rest",],
+      // comments are not legal JSON
+      "views": NaN,
+      "body": "raw
+newline inside a string",
+      "published": true,
+    },
+  ],
+  meta: {"total": 1,},
+}
